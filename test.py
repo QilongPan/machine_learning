@@ -12,5 +12,5 @@ class Student(object):
     def display(self):
         print(23)
 
-stu = Student()
-stu.display()
+for i in range(10,-1,-1):
+	print(random.uniform(0, 1) )
