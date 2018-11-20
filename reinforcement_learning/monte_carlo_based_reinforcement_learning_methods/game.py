@@ -2,7 +2,7 @@
 # @Author: Qilong Pan
 # @Date:   2018-11-20 14:23:01
 # @Last Modified by:   Qilong Pan
-# @Last Modified time: 2018-11-20 14:47:06
+# @Last Modified time: 2018-11-20 15:21:03
 
 '''
 走迷宫例子
@@ -40,6 +40,20 @@ class Game(object):
             next_state = state
         if next_state == 0 or next_state == 15:
             return next_state
+            
+        if state == 3 and next_state == 4:
+            return state
+        elif state == 4 and next_state == 3:
+            return state
+        elif state == 7 and next_state == 8:
+            return state
+        elif state == 8 and next_state == 7:
+            return state
+        elif state == 11 and next_state == 12:
+            return state
+        elif state == 12 and next_state == 11:
+            return state
+
         return next_state
 
     def is_end(self,state):

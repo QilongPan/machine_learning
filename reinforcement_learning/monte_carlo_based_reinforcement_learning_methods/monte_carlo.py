@@ -2,7 +2,7 @@
 # @Author: Qilong Pan
 # @Date:   2018-11-20 14:39:59
 # @Last Modified by:   Qilong Pan
-# @Last Modified time: 2018-11-20 15:01:38
+# @Last Modified time: 2018-11-20 15:15:52
 
 from game import Game 
 import random
@@ -17,6 +17,11 @@ class MonteCarlo(object):
         self.values = [0 for i in range(len(self.game.states))]
         self.values[0] = 1
         self.values[15] = 1
+        self.pi = dict()
+        for state in self.game.states:
+            if state == 0 or state == 15:
+                continue
+            self.pi[state] = self.game.actions[0]
 
     def mc_method(self):
         current_simulations = 0
@@ -42,10 +47,27 @@ class MonteCarlo(object):
             if self.visits[j] > 0:
                 self.values[j] = self.values[j] / self.visits[j]
 
+    #根据值函数更新策略
+    def policy_improve(self):
+        for i in range(len(self.game.states)):
+            if i == 0 or i == 15:
+                continue
+            max_value = self.values[self.game.states[i]]
+            for j in range(len(self.game.actions)):
+                next_state = self.game.do_action(self.game.states[i],self.game.actions[j])
+                print(next_state)
+                if self.values[next_state] > max_value:
+                    self.pi[self.game.states[i]] = self.game.actions[j]
+                    max_value = self.values[next_state]
+
 if __name__ == "__main__":
     mc = MonteCarlo()
     mc.mc_method()
+    mc.policy_improve()
     for i in range(len(mc.values)):
         print(round(mc.values[i],1),end = "   ")
         if i == 3 or i == 7 or i == 11 or i == 15:
             print()
+
+    for key,value in mc.pi.items():
+        print("{key}:{value}".format(key = key,value = value))
