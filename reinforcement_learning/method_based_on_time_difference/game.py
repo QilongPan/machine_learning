@@ -4,10 +4,7 @@
 # @Last Modified by:   Qilong Pan
 # @Last Modified time: 2018-11-20 18:47:08
 
-'''
-在更新St的动作值函数需要St+1的动作值函数，Sarsa用的是e-greedy方法，和选择St下的动作一样；
-而Q-learning是用的greedy方法和选择St下动作不一样，因此称为off-policy
-'''
+
 '''
 走迷宫例子
 0  1  2  3 

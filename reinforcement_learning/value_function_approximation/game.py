@@ -14,23 +14,20 @@
 0和15为迷宫出口，机器人的起始位置是随机的
 '''
 import random
+import numpy as np 
 
 class Game(object):
 
     def __init__(self):
         self.states = range(16)
         self.actions = ['up','down','left','right']
-        self.feature_states = dict()
-        '''
-        表示16种状态
-        '''
-        for i  in range(16):
-            self.feature_states[i] = None
+        self.gamma = 0.8
 
     def do_action(self,state,action):
         #到达终点，reward 为0,其余状态为-1
+        next_state = state
         if state == 0 or state == 15:
-            return True,state,0
+            return state
         if action == 'up':
             next_state = state - 4
         elif action == 'down':
@@ -40,10 +37,9 @@ class Game(object):
         elif action == 'right':
             next_state = state + 1
         if next_state < 0 or next_state > 15:
-            next_state = state
+            return state
         if next_state == 0 or next_state == 15:
             return next_state
-            
         if state == 3 and next_state == 4:
             return state
         elif state == 4 and next_state == 3:
@@ -57,7 +53,7 @@ class Game(object):
         elif state == 12 and next_state == 11:
             return state
 
-        return next_state
+        return state
 
     def is_end(self,state):
         if state == 0 or state == 15:
