@@ -2,7 +2,7 @@
 # @Author: Qilong Pan
 # @Date:   2018-11-22 16:14:08
 # @Last Modified by:   Qilong Pan
-# @Last Modified time: 2018-11-22 16:25:33
+# @Last Modified time: 2018-11-22 18:41:09
 import random
 from game import Game
 import numpy as np 
@@ -57,6 +57,7 @@ class QLearning(object):
         for i in range(len(self.theta)):
             value += feature[i] * self.theta[i]
         return value
+
     #反向传播
     def update(self,state,action_index,true_value,alpha):
         pre_value = self.value_function(state,self.game.actions[action_index])
@@ -66,7 +67,7 @@ class QLearning(object):
         for i in range(len(self.theta)):
             self.theta[i] += alpha * error_value * feature[i]
 
-    def sarsa(self,epsilon):
+    def q_learning(self,epsilon):
         for i in range(self.iterator_number):
             state = self.game.states[random.randint(1,len(self.game.states) - 2)]
             action_index = random.randint(0,len(self.game.actions) - 1)
@@ -78,9 +79,9 @@ class QLearning(object):
                 else:
                     reward = 0
                 #取得最好的下一状态，采用greedy策略
-                best_value = value_function(state,self.game.actions[0])
+                best_value = self.value_function(state,self.game.actions[0])
                 for j in range(len(self.game.actions)):
-                    value = value_function(state,self.game.actions[j])
+                    value = self.value_function(state,self.game.actions[j])
                     if value > best_value:
                         best_value = value
                 next_reward = reward + self.game.gamma * best_value
@@ -91,10 +92,10 @@ class QLearning(object):
                 move_number += 1
 
 if __name__ == '__main__':
-    sar = QLearning()
-    sar.QLearning(0.5)
-    for i in range(len(sar.game.states)):
-        for j in range(len(sar.game.actions)):
-            print(round(sar.value_function(sar.game.states[i],sar.game.actions[j]),1),end = "     ")
+    learn = QLearning()
+    learn.q_learning(0.5)
+    for i in range(len(learn.game.states)):
+        for j in range(len(learn.game.actions)):
+            print(round(learn.value_function(learn.game.states[i],learn.game.actions[j]),1),end = "     ")
         print()
-    print(sar.theta)
+    print(learn.theta)
