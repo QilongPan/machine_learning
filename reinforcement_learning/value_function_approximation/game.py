@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Qilong Pan
-# @Date:   2018-11-21 14:52:00
+# @Date:   2018-11-20 14:23:01
 # @Last Modified by:   Qilong Pan
-# @Last Modified time: 2018-11-21 15:16:48
+# @Last Modified time: 2018-11-22 10:25:17
 
 '''
 走迷宫例子
@@ -20,12 +20,9 @@ class Game(object):
     def __init__(self):
         self.states = range(16)
         self.actions = ['up','down','left','right']
-        self.feature_states = dict()
-        '''
-        表示16种状态
-        '''
-        for i  in range(16):
-            self.feature_states[i] = None
+        #所有动作的报酬都为-1，机器人越早出迷宫越好
+        self.rewards = -1
+        self.gamma = 0.8
 
     def do_action(self,state,action):
         #到达终点，reward 为0,其余状态为-1
@@ -65,20 +62,14 @@ class Game(object):
         else:
             return False
 
-    '''
-    出迷宫奖励为0，没出动作为-1
-    '''
-    def get_reward(self,state,action):
-        if state == 1:
-            if action == 'left':
-                return 0
-        elif state == 4:
-            if action == 'up':
-                return 0
-        elif state == 11:
-            if action == 'down':
-                return 0
-        elif state == 14:
-            if action == 'right':
-                return 0
-        return -1
+    def simulation(self,start_state):
+        sequence = [start_state]
+        move_number = 0
+        while not self.is_end(start_state) and move_number < 50:
+            #这里采用的是随机策略，更正确的做法是采用探索和利用的方法,以保证每个动作都能被选取，并利用过去的信息
+            action_index = random.randint(0,len(self.actions) - 1)
+            action = self.actions[action_index]
+            start_state = self.do_action(start_state,action)
+            sequence.append(start_state)
+            move_number += 1
+        return sequence
