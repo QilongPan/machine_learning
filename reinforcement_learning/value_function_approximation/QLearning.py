@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Author: Qilong Pan
+# @Date:   2018-11-22 16:14:08
+# @Last Modified by:   Qilong Pan
+# @Last Modified time: 2018-11-22 16:25:33
 import random
 from game import Game
 import numpy as np 
@@ -5,7 +10,7 @@ import numpy as np
 在更新St的动作值函数需要St+1的动作值函数，Sarsa用的是e-greedy方法，和选择St下的动作一样；
 而Q-learning是用的greedy方法和选择St下动作不一样，因此称为off-policy
 '''
-class Sarsa(object):
+class QLearning(object):
 
     def __init__(self):
         self.game = Game()
@@ -72,17 +77,22 @@ class Sarsa(object):
                     reward = 1
                 else:
                     reward = 0
-                #选择St和找St+1的动作函数都是采用的ε-greedy策略
-                next_action_index = self.epsilon_greedy(next_state,epsilon)
-                next_reward = reward + self.game.gamma * self.value_function(next_state,self.game.actions[next_action_index])
+                #取得最好的下一状态，采用greedy策略
+                best_value = value_function(state,self.game.actions[0])
+                for j in range(len(self.game.actions)):
+                    value = value_function(state,self.game.actions[j])
+                    if value > best_value:
+                        best_value = value
+                next_reward = reward + self.game.gamma * best_value
                 self.update(state,action_index,next_reward,self.alpha)
                 state = next_state
-                action_index = next_action_index
+                #走步策略采用ε-greedy策略
+                action_index = self.epsilon_greedy(next_state,epsilon)
                 move_number += 1
 
 if __name__ == '__main__':
-    sar = Sarsa()
-    sar.sarsa(0.5)
+    sar = QLearning()
+    sar.QLearning(0.5)
     for i in range(len(sar.game.states)):
         for j in range(len(sar.game.actions)):
             print(round(sar.value_function(sar.game.states[i],sar.game.actions[j]),1),end = "     ")
