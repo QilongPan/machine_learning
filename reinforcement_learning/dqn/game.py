@@ -2,7 +2,7 @@
 # @Author: Qilong Pan
 # @Date:   2018-11-20 14:23:01
 # @Last Modified by:   Qilong Pan
-# @Last Modified time: 2018-11-22 16:04:14
+# @Last Modified time: 2018-11-23 16:15:41
 
 '''
 走迷宫例子
@@ -187,9 +187,9 @@ class Game(object):
         return_feature = np.array([0.0 for i in range(len(self.states))])
         return_feature[state] = 1.0
         return return_feature 
-              
+
     def is_end(self,state):
-        if state == 0 or state == 7:
+        if state == 0 or state == 15:
             return True
         else:
             return False
