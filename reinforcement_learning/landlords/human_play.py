@@ -58,7 +58,7 @@ def run():
     human = Human(config)
     human2 = Human(config)
     human3 = Human(config)
-    game.start_play(mcts_player1,human,mcts_player2)
+    game.start_play(human2,human,human3)
 
 if __name__ == '__main__':
     run()

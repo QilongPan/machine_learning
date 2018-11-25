@@ -3,6 +3,13 @@
 # @Date:   2018-11-24 11:31:57
 # @Last Modified by:   Qilong Pan
 # @Last Modified time: 2018-11-24 15:35:26
+
+'''
+简易斗地主游戏
+牌为3,4,5,6,7,8, 每张牌各四张 牌的总数为24张
+玩家人数为3家，每家手上具有8张牌。玩家依次出牌,先出完牌即获胜
+出牌组合：单,双，三
+'''
 from __future__ import print_function
 from copy import deepcopy
 import numpy as np
@@ -139,8 +146,6 @@ class Board(object):
         for i in range(len(self.already_played_cards)-1,-1,-1):
             cards = self.already_played_cards[i]
             for card in cards:
-
-
         index = 3
         for cards in self.already_played_cards:
             for card in cards:
