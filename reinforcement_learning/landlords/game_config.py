@@ -2,7 +2,7 @@
 # @Author: Qilong Pan
 # @Date:   2018-11-24 11:33:03
 # @Last Modified by:   Qilong Pan
-# @Last Modified time: 2018-11-24 14:12:05
+# @Last Modified time: 2018-11-26 10:13:58
 
 from __future__ import print_function
 
@@ -11,12 +11,11 @@ class GameConfig(object):
     def __init__(self):
         self.valid_card_names = ['3','4','5','6','7','8']
         self.valid_card_values = [0,1,2,3,4,5]
-        self.cards = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,
-                        35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53]
+        self.cards = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
         self.cards_number = 24
         self.deal_card_number = 8
         self.player_number = 3
-        self.pass_move = 41
+        self.pass_move = 18
         self.players = []
         for i in range(self.player_number):
             self.players.append(i)
@@ -50,11 +49,11 @@ class GameConfig(object):
         return card_values,True
 
     def get_cards_type_by_move(self,move):
-        if move >= 0 and move <= 14:
+        if move >= 0 and move <= 5:
             return 0
-        elif move >= 15 and move <= 27:
+        elif move >= 6 and move <= 11:
             return 1
-        elif move >= 28 and move <= 40:
+        elif move >= 12 and move <= 17:
             return 2
         return -1
 
@@ -70,9 +69,9 @@ class GameConfig(object):
             if card_number[i] >= 1:
                 moves.append(i)
             if card_number[i] >= 2:
-                moves.append(i+15)
+                moves.append(i+ 6)
             if card_number[i] >= 3:
-                moves.append(i+28)
+                moves.append(i+ 12)
         moves = sorted(moves)
         return moves
 
@@ -87,14 +86,14 @@ class GameConfig(object):
             card_count = 1
             add_value = 0
         elif cards_type == 1:
-            cards_value = meet_move - 15
+            cards_value = meet_move - 6
             card_count = 2
-            add_value = 15
+            add_value = 6
         elif cards_type == 2:
-            cards_value = meet_move - 28
+            cards_value = meet_move - 12
             card_count = 3
-            add_value = 28
-        for i in range(cards_value+1,15):
+            add_value = 12
+        for i in range(cards_value+1,len(self.valid_card_values)):
             if card_number[i] >= card_count:
                 moves.append(i + add_value )
         moves.append(self.pass_move)
@@ -102,7 +101,7 @@ class GameConfig(object):
         return moves
 
     def get_card_value(self,card):
-        if card == self.cards[len(self.cards) - 1]:
+        if card == 53:
             return 14
         else:
             return card // 4
@@ -130,16 +129,15 @@ class GameConfig(object):
     def get_move_by_cards(self,cards):
         if len(cards) == 0:
             return self.pass_move
-
         cards_type = self.get_cards_type(cards)
         cards_value = self.get_cards_value(cards,cards_type)
         #单牌
         if cards_type == 0:
-            dic = {0:0,1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11,12:12,13:13,14:14}
+            dic = {0:0,1:1,2:2,3:3,4:4,5:5}
         elif cards_type == 1:
-            dic = {0:15,1:16,2:17,3:18,4:19,5:20,6:21,7:22,8:23,9:24,10:25,11:26,12:27}
+            dic = {0:6,1:7,2:8,3:9,4:10,5:11}
         elif cards_type == 2:
-            dic = {0:28,1:29,2:30,3:31,4:32,5:33,6:34,7:35,8:36,9:37,10:38,11:39,12:40}
+            dic = {0:12,1:13,2:14,3:15,4:16,6:17}
         return dic[cards_value]
 
     def get_card_name(self,card):

@@ -2,7 +2,7 @@
 # @Author: Qilong Pan
 # @Date:   2018-11-24 11:31:57
 # @Last Modified by:   Qilong Pan
-# @Last Modified time: 2018-11-24 15:35:26
+# @Last Modified time: 2018-11-26 18:55:52
 
 '''
 简易斗地主游戏
@@ -72,17 +72,17 @@ class Board(object):
 
     def get_cards_by_move(self,move):
         cards_values = []
-        if move >= 0 and move <= 14:
+        if move >= 0 and move <= 5:
             cards_values.append(move)
             return self.get_cards_by_card_values(cards_values,self.current_player)
-        elif move >= 15 and move <= 27:
-            cards_values.append(move - 15)
-            cards_values.append(move - 15)
+        elif move >= 6 and move <= 11:
+            cards_values.append(move - 6)
+            cards_values.append(move - 6)
             return self.get_cards_by_card_values(cards_values,self.current_player)
-        elif move >= 28 and move <= 40:
-            cards_values.append(move - 28)
-            cards_values.append(move - 28)
-            cards_values.append(move - 28)
+        elif move >= 12 and move <= 17:
+            cards_values.append(move - 12)
+            cards_values.append(move - 12)
+            cards_values.append(move - 12)
             return self.get_cards_by_card_values(cards_values,self.current_player)
         return cards_values
 
@@ -113,7 +113,7 @@ class Board(object):
 
     def game_end(self):
         for i in self.players_hand_cards:
-            if len(self.players_hand_cards[i]) <= 10:
+            if len(self.players_hand_cards[i]) <= 0:
                 return True,i
         return False,-1
 
@@ -122,43 +122,42 @@ class Board(object):
     第二个通道为上家牌
     第三个通道为下家牌
     接下来的通道为玩家倒着的出牌序列
+    横坐标表示3-8的牌
+    纵坐标第一个为己方拥有牌特征
     '''
     def current_state(self):
-        square_state = np.zeros((5, 54, 1))
         before_player = self.config.get_before_player(self.current_player)
         after_player = self.config.get_after_player(self.current_player)
-        #初始化前三个通道
-        for card in self.config.cards:
-            if card in self.players_hand_cards[self.current_player]:
-                square_state[0][card,0] = 1.0
-            else:
-                square_state[0][card,0] = 0.0
-            if card in self.players_hand_cards[before_player]:
-                square_state[1][card,0] = 1.0
-            else:
-                square_state[1][card,0] = 0.0
-            if card in self.players_hand_cards[after_player]:
-                square_state[2][card,0] = 1.0
-            else:
-                square_state[2][card,0] = 0.0
-                square_state[index][card,0] = 1.0
-        index = 3
+        print(before_player)
+        print(after_player)
+        square_state = np.zeros((25,6,5))
+        #初始化所有玩家已经出过的牌，最多22轮
+        current_index = 0
         for i in range(len(self.already_played_cards)-1,-1,-1):
-            cards = self.already_played_cards[i]
-            for card in cards:
-        index = 3
-        for cards in self.already_played_cards:
-            for card in cards:
-                square_state[index][card,0] = 1.0
-            index += 1
-            if index > 21:
-                break
-        #初始化第四个通道
-        for card in self.meet_cards:
-            square_state[3][card,0] = 1.0
-
-        for i in range(54):
-            square_state[4][i,0] = self.meet_move_player
+            played_cards = self.already_played_cards[i]
+            y_type = 0
+            if len(played_cards) == 0:
+                y_type = 0
+            elif len(played_cards) == 1:
+                y_type = 1
+            elif len(played_cards) == 2:
+                y_type = 2
+            elif len(played_cards) == 3:
+                y_type = 3
+            for card in played_cards:
+                square_state[current_index][self.config.get_card_value(card),y_type] += 1.0
+            current_index += 1
+        y_type = 4
+        #初始化自己的手牌
+        for key in self.players_every_card_number:
+            card_number = self.players_every_card_number[key]
+            for i in range(len(card_number)):
+                if key == self.current_player:
+                    square_state[22][i,y_type] = card_number[i]
+                elif key == after_player:
+                    square_state[23][i,y_type] = card_number[i]
+                elif key == before_player:
+                    square_state[24][i,y_type] = card_number[i]
         return square_state
 
 class Game(object):
@@ -195,11 +194,14 @@ class Game(object):
             move = player_in_turn.get_action(self.board)
             cards = self.board.get_cards_by_move(move)
             cards_names = self.board.config.get_card_names_by_cards(cards)
+            print(self.board.current_state())
             print("current player:",current_player)
             print("play cards:")
             print(cards_names)
             print("")
+
             self.board.do_move(move)
+            
             print("play player:",self.board.get_current_player())
             print("availables:")
             print(self.board.availables)

@@ -2,7 +2,7 @@
 # @Author: Qilong Pan
 # @Date:   2018-11-24 14:12:25
 # @Last Modified by:   Qilong Pan
-# @Last Modified time: 2018-11-24 14:12:35
+# @Last Modified time: 2018-11-26 10:04:51
 from __future__ import print_function
 from game import Board, Game
 from game_config import GameConfig
@@ -50,11 +50,7 @@ def run():
     config = GameConfig()
     board = Board(config)
     game = Game(board)
-    best_policy1 = PolicyValueNet(1, 54, model_file)
-#    best_policy2 = PolicyValueNet(1, 54, model_file)    
-    mcts_player1 = MCTSPlayer(best_policy1.policy_value_fn,c_puct=5,n_playout=1500)
     mcts_player2 = MCTS_Pure(c_puct=5,n_playout=1000)
-#    mcts_player1 = MCTS_Pure(c_puct=5,n_playout=1000)
     human = Human(config)
     human2 = Human(config)
     human3 = Human(config)
