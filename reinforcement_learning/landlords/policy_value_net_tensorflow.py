@@ -11,9 +11,10 @@ class PolicyValueNet():
     def __init__(self, board_width, board_height, model_file=None):
         self.board_width = board_width
         self.board_height = board_height
-        self.move_numbers = 42
+        self.move_numbers = 19
+        self.passage_number = 25
         self.input_states = tf.placeholder(
-                tf.float32, shape=[None, 5, board_height, board_width])
+                tf.float32, shape=[None, self.passage_number, board_height, board_width])
         self.input_state = tf.transpose(self.input_states, [0, 2, 3, 1])
         # 2. Common Networks Layers
         #data_format:channels_last对应于具有形状（批次，高度，宽度，通道）的输入，而channels_first对应于具有形状的输入（批次，通道，高度，宽度）
@@ -123,7 +124,7 @@ class PolicyValueNet():
         """
         legal_positions = board.availables
         current_state = np.ascontiguousarray(board.current_state().reshape(
-                -1,5, self.board_height, self.board_width))
+                -1,self.passage_number, self.board_height, self.board_width))
         act_probs, value = self.policy_value(current_state)
         act_probs = zip(legal_positions, act_probs[0][legal_positions])
         return act_probs, value

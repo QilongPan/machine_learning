@@ -14,8 +14,8 @@ from policy_value_net_tensorflow import PolicyValueNet
 
 class TrainPipeline():
     def __init__(self, init_model=None):
-        self.board_width = 1
-        self.board_height = 54
+        self.board_width = 5
+        self.board_height = 6
         self.config = GameConfig()
         self.board = Board(self.config)
         self.game = Game(self.board)
@@ -28,9 +28,9 @@ class TrainPipeline():
         self.n_playout = 2000  # num of simulations for each move
         self.c_puct = 5 #UCTK
         self.buffer_size = 10000
-        self.batch_size = 512  # mini-batch size for training
+        self.batch_size = 200  # mini-batch size for training
         self.data_buffer = deque(maxlen=self.buffer_size)
-        self.play_batch_size = 1
+        self.play_batch_size = 20
         self.epochs = 5  # num of train_steps for each update
         self.kl_targ = 0.02
         self.check_freq = 50
@@ -78,6 +78,9 @@ class TrainPipeline():
 
     def collect_selfplay_data(self, n_games=1):
         for i in range(n_games):
+            self.config = GameConfig()
+            self.board = Board(self.config)
+            self.game = Game(self.board)
             winner, play_data = self.game.start_self_play(self.mcts_player,temp=self.temp)
             play_data = list(play_data)[:]
             self.episode_len = len(play_data)

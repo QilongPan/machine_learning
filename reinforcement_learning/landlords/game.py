@@ -128,8 +128,6 @@ class Board(object):
     def current_state(self):
         before_player = self.config.get_before_player(self.current_player)
         after_player = self.config.get_after_player(self.current_player)
-        print(before_player)
-        print(after_player)
         square_state = np.zeros((25,6,5))
         #初始化所有玩家已经出过的牌，最多22轮
         current_index = 0
@@ -185,7 +183,6 @@ class Game(object):
         player2.set_player_ind(p2)
         player3.set_player_ind(p3)
         players = {p1: player1, p2: player2,p3:player3}
-        count = 0
         if is_shown:
             self.graphic(self.board)
         while True:
@@ -194,7 +191,7 @@ class Game(object):
             move = player_in_turn.get_action(self.board)
             cards = self.board.get_cards_by_move(move)
             cards_names = self.board.config.get_card_names_by_cards(cards)
-            print(self.board.current_state())
+            self.board.current_state()
             print("current player:",current_player)
             print("play cards:")
             print(cards_names)
@@ -205,7 +202,6 @@ class Game(object):
             print("play player:",self.board.get_current_player())
             print("availables:")
             print(self.board.availables)
-            count = count + 1
             if is_shown:
                 self.graphic(self.board)
             end, winner = self.board.game_end()
@@ -224,8 +220,17 @@ class Game(object):
             states.append(self.board.current_state())
             mcts_probs.append(move_probs)
             current_players.append(self.board.current_player)
+            cards = self.board.get_cards_by_move(move)
+            cards_names = self.board.config.get_card_names_by_cards(cards)
+            print("current player:",self.board.current_player)
+            print("play cards:")
+            print(cards_names)
+            print("")
             self.board.do_move(move)
-            if is_shown:
+            print("play player:",self.board.get_current_player())
+            print("availables:")
+            print(self.board.availables)
+            if True:
                 self.graphic(self.board)
             end,winner = self.board.game_end()
             if end:
