@@ -2,7 +2,7 @@
 # @Author: Qilong Pan
 # @Date:   2018-11-24 11:31:57
 # @Last Modified by:   Qilong Pan
-# @Last Modified time: 2018-11-26 18:55:52
+# @Last Modified time: 2018-11-27 09:06:53
 
 '''
 简易斗地主游戏
@@ -123,12 +123,12 @@ class Board(object):
     第三个通道为下家牌
     接下来的通道为玩家倒着的出牌序列
     横坐标表示3-8的牌
-    纵坐标第一个为己方拥有牌特征
+    纵坐标第一个为己方拥有牌特征 0表示pass,1表示单牌,2表示对子，3表示三条，4表示手上剩余的牌，5表示已经出过的牌
     '''
     def current_state(self):
         before_player = self.config.get_before_player(self.current_player)
         after_player = self.config.get_after_player(self.current_player)
-        square_state = np.zeros((25,6,5))
+        square_state = np.zeros((26,6,6))
         #初始化所有玩家已经出过的牌，最多22轮
         current_index = 0
         for i in range(len(self.already_played_cards)-1,-1,-1):
@@ -145,17 +145,24 @@ class Board(object):
             for card in played_cards:
                 square_state[current_index][self.config.get_card_value(card),y_type] += 1.0
             current_index += 1
+            if current_index >= 21:
+                break
+        y_type = 5
+        for i in range(len(self.already_played_cards)):
+            played_cards = self.already_played_cards[i]
+            for card in played_cards:
+                square_state[22][self.config.get_card_value(card),y_type] += 1.0
         y_type = 4
         #初始化自己的手牌
         for key in self.players_every_card_number:
             card_number = self.players_every_card_number[key]
             for i in range(len(card_number)):
                 if key == self.current_player:
-                    square_state[22][i,y_type] = card_number[i]
-                elif key == after_player:
                     square_state[23][i,y_type] = card_number[i]
-                elif key == before_player:
+                elif key == after_player:
                     square_state[24][i,y_type] = card_number[i]
+                elif key == before_player:
+                    square_state[25][i,y_type] = card_number[i]
         return square_state
 
 class Game(object):
@@ -191,7 +198,7 @@ class Game(object):
             move = player_in_turn.get_action(self.board)
             cards = self.board.get_cards_by_move(move)
             cards_names = self.board.config.get_card_names_by_cards(cards)
-            self.board.current_state()
+            print(self.board.current_state())
             print("current player:",current_player)
             print("play cards:")
             print(cards_names)

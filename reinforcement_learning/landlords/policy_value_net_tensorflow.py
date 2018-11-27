@@ -2,7 +2,7 @@
 # @Author: Qilong Pan
 # @Date:   2018-11-24 14:14:26
 # @Last Modified by:   Qilong Pan
-# @Last Modified time: 2018-11-24 14:14:40
+# @Last Modified time: 2018-11-27 15:26:15
 import numpy as np
 import tensorflow as tf
 
@@ -12,7 +12,7 @@ class PolicyValueNet():
         self.board_width = board_width
         self.board_height = board_height
         self.move_numbers = 19
-        self.passage_number = 25
+        self.passage_number = 26
         self.input_states = tf.placeholder(
                 tf.float32, shape=[None, self.passage_number, board_height, board_width])
         self.input_state = tf.transpose(self.input_states, [0, 2, 3, 1])

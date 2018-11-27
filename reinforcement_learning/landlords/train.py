@@ -2,7 +2,7 @@
 # @Author: Qilong Pan
 # @Date:   2018-11-24 14:14:57
 # @Last Modified by:   Qilong Pan
-# @Last Modified time: 2018-11-24 14:55:38
+# @Last Modified time: 2018-11-27 15:23:16
 from __future__ import print_function
 import random
 import numpy as np
@@ -14,7 +14,7 @@ from policy_value_net_tensorflow import PolicyValueNet
 
 class TrainPipeline():
     def __init__(self, init_model=None):
-        self.board_width = 5
+        self.board_width = 6
         self.board_height = 6
         self.config = GameConfig()
         self.board = Board(self.config)
@@ -30,7 +30,7 @@ class TrainPipeline():
         self.buffer_size = 10000
         self.batch_size = 200  # mini-batch size for training
         self.data_buffer = deque(maxlen=self.buffer_size)
-        self.play_batch_size = 20
+        self.play_batch_size = 1
         self.epochs = 5  # num of train_steps for each update
         self.kl_targ = 0.02
         self.check_freq = 50
@@ -54,33 +54,8 @@ class TrainPipeline():
                                       n_playout=self.n_playout,
                                       is_selfplay=1)
 
-    def get_equi_data(self, play_data):
-        """augment the data set by rotation and flipping
-        play_data: [(state, mcts_prob, winner_z), ..., ...]
-        """
-        extend_data = []
-        for state, mcts_porb, winner in play_data:
-            for i in [1, 2, 3, 4]:
-                # rotate counterclockwise
-                equi_state = np.array([np.rot90(s, i) for s in state])
-                equi_mcts_prob = np.rot90(np.flipud(
-                    mcts_porb.reshape(self.board_height, self.board_width)), i)
-                extend_data.append((equi_state,
-                                    np.flipud(equi_mcts_prob).flatten(),
-                                    winner))
-                # flip horizontally
-                equi_state = np.array([np.fliplr(s) for s in equi_state])
-                equi_mcts_prob = np.fliplr(equi_mcts_prob)
-                extend_data.append((equi_state,
-                                    np.flipud(equi_mcts_prob).flatten(),
-                                    winner))
-        return extend_data
-
     def collect_selfplay_data(self, n_games=1):
         for i in range(n_games):
-            self.config = GameConfig()
-            self.board = Board(self.config)
-            self.game = Game(self.board)
             winner, play_data = self.game.start_self_play(self.mcts_player,temp=self.temp)
             play_data = list(play_data)[:]
             self.episode_len = len(play_data)
