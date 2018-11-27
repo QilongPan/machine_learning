@@ -25,7 +25,7 @@ class TrainPipeline():
         #自动调整学习率 kl比较两个概率分布的接近程度。在某个变化范围内，KL散度取到最小值的时候，对应的参数是我们想要的最优参数
         self.lr_multiplier = 1.0  # adaptively adjust the learning rate based on KL
         self.temp = 1.0  # the temperature param
-        self.n_playout = 2000  # num of simulations for each move
+        self.n_playout = 1500  # num of simulations for each move
         self.c_puct = 5 #UCTK
         self.buffer_size = 10000
         self.batch_size = 200  # mini-batch size for training
@@ -39,7 +39,7 @@ class TrainPipeline():
         self.game_batch_num = 1
         # num of simulations used for the pure mcts, which is used as
         # the opponent to evaluate the trained policy
-        self.pure_mcts_playout_num = 1500
+        self.pure_mcts_playout_num = 5000
         if init_model:
             # start training from an initial policy-value net
             self.policy_value_net = PolicyValueNet(self.board_width,
