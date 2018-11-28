@@ -2,7 +2,7 @@
 # @Author: Qilong Pan
 # @Date:   2018-11-24 14:13:04
 # @Last Modified by:   Qilong Pan
-# @Last Modified time: 2018-11-24 14:13:18
+# @Last Modified time: 2018-11-28 09:15:56
 import numpy as np
 import copy
 
@@ -73,8 +73,7 @@ class TreeNode(object):
         c_puct: a number in (0, inf) controlling the relative impact of
             value Q, and prior probability P, on this node's score.
         """
-        self._u = (c_puct * self._P *
-                   np.sqrt(self._parent._n_visits) / (1 + self._n_visits))
+        self._u = (c_puct * self._P * np.sqrt(self._parent._n_visits) / (1 + self._n_visits))
         return self._Q + self._u
 
     def is_leaf(self):

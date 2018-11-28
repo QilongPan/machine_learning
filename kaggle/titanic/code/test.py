@@ -6,8 +6,8 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import KFold
 import numpy as np
 
-data_train = pd.read_csv("E:/machine_learning/kaggle/titanic/data/train.csv")
-data_test = pd.read_csv("E:/machine_learning/kaggle/titanic/data/test.csv")
+data_train = pd.read_csv("E:/allcode/machineLearningExercise/titanic/data/train.csv")
+data_test = pd.read_csv("E:/allcode/machineLearningExercise/titanic/data/test.csv")
 #Age列中的缺失值用Age中位数进行填充
 data_train["Age"] = data_train['Age'].fillna(data_train['Age'].median()) 
 #Sex性别列处理：male用0，female用1
@@ -111,9 +111,9 @@ print(scores.mean())
 #30棵决策树，停止的条件：样本个数为2，叶子节点个数为1
 alg=RandomForestClassifier(random_state=1,n_estimators=100,min_samples_split=2,min_samples_leaf=1) 
 train_predictors = (data_train[predictors])
-	#The target we're using to train the algorithm.
+#The target we're using to train the algorithm.
 train_target = data_train["Survived"]
-	#Training the algorithm using the predictors and target.
+#Training the algorithm using the predictors and target.
 alg.fit(train_predictors,train_target)
 predictions = []
 test_predictions = alg.predict(data_test[predictors])
@@ -121,5 +121,5 @@ predictions.append(test_predictions)
 predictions = np.array(predictions).reshape(418,1)
 data1 = DataFrame(predictions)
 data1.index = range(892,892+len(data1))
-data1.to_csv('E:/machine_learning/kaggle/titanic/data/predictions.csv')
+data1.to_csv('E:/allcode/machineLearningExercise/titanic/data/predictions.csv')
 print(data1)
