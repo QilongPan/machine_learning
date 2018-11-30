@@ -2,7 +2,7 @@
 # @Author: Qilong Pan
 # @Date:   2018-11-28 13:05:40
 # @Last Modified by:   Qilong Pan
-# @Last Modified time: 2018-11-28 13:08:56
+# @Last Modified time: 2018-11-30 10:26:58
 
 from game import Game
 import tensorflow as tf 
@@ -49,6 +49,12 @@ class DDqn(object):
         features = features.reshape([1,16])
         return self.sess.run(self.predict_y,feed_dict={self.input_x:np.array(features)})
 
+    def value_function2(self,state,action):
+        next_state = self.game.do_action(state,action)
+        features = self.game.get_features(next_state)
+        features = np.array([features])
+        features = features.reshape([1,16])
+        return self.sess.run(self.predict_y2,feed_dict={self.input_x:np.array(features)})
 
     def ddqn(self):
         #地图每个位置表示一个特征，机器人所在位置为1，其余位置为0
@@ -63,7 +69,10 @@ class DDqn(object):
         self.predict_y = tf.matmul(self.input_x,self.w) + self.b
         self.predict_y2 = tf.matmul(self.input_x,self.w2) +self.b2
         
-        self.loss = tf.reduce_mean(tf.square(self.predict_y - self.input_y))
+        self.loss1 = tf.reduce_mean(tf.square(self.predict_y - self.input_y))
+        self.loss2 = tf.reduce_mean(tf.square(self.predict_y2 - self.input_y))
+
+        self.loss = self.loss1 + self.loss2
         self.optimizer = tf.train.GradientDescentOptimizer(0.03)
         self.train = self.optimizer.minimize(self.loss)
         self.init = tf.global_variables_initializer()
@@ -82,9 +91,9 @@ class DDqn(object):
                     reward = 0
                 state_features = self.game.get_features(next_state)
                 #取得最好的下一状态，采用greedy策略
-                best_value = self.value_function(next_state,self.game.actions[0])[0]
+                best_value = self.value_function2(next_state,self.game.actions[0])[0]
                 for j in range(len(self.game.actions)):
-                    value = self.value_function(next_state,self.game.actions[j])[0]
+                    value = self.value_function2(next_state,self.game.actions[j])[0]
                     if value > best_value:
                         best_value = value
                 next_reward = reward + self.gamma * best_value
@@ -99,7 +108,7 @@ if __name__ == "__main__":
     ddn.ddqn()
     for i in range(len(ddn.game.states)):
         for j in range(len(ddn.game.actions)):
-            value = ddn.value_function(ddn.game.states[i],ddn.game.actions[j])[0][0]
+            value = ddn.value_function2(ddn.game.states[i],ddn.game.actions[j])[0][0]
             print(round(value,2),end = "     ")
         print()
     ddn.sess.close()
