@@ -36,7 +36,7 @@ class TrainPipeline():
         self.check_freq = 50
     #    self.check_freq = 25
     #    self.game_batch_num = 1500
-        self.game_batch_num = 1
+        self.game_batch_num = 5000
         # num of simulations used for the pure mcts, which is used as
         # the opponent to evaluate the trained policy
         self.pure_mcts_playout_num = 5000
