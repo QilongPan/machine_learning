@@ -2,7 +2,7 @@
 # @Author: Qilong Pan
 # @Date:   2018-11-28 13:30:26
 # @Last Modified by:   Qilong Pan
-# @Last Modified time: 2018-11-28 15:12:44
+# @Last Modified time: 2018-12-11 10:18:09
 
 import numpy as np 
 
@@ -92,3 +92,9 @@ numpy.itemsize:返回数组中每个元素的字节单位长度
 '''
 arr10 = np.array([1,2,3,4,5], dtype = np.int8)
 print(arr10.itemsize)
+
+arr11 = np.array([1,2,3,4,5],dtype = np.int32)
+'''
+astype实现类型转换
+'''
+print(arr11.astype('float32'))
