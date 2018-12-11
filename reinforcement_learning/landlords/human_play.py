@@ -2,7 +2,7 @@
 # @Author: Qilong Pan
 # @Date:   2018-11-24 14:12:25
 # @Last Modified by:   Qilong Pan
-# @Last Modified time: 2018-11-26 10:04:51
+# @Last Modified time: 2018-12-10 15:56:03
 from __future__ import print_function
 from game import Board, Game
 from game_config import GameConfig
@@ -46,11 +46,12 @@ class Human(object):
         return "Human {}".format(self.player)    
 
 def run():
-    model_file = './best_policy.model'
+    model_file = './current_policy.model'
+    best_policy = PolicyValueNet(6,6,model_file)
     config = GameConfig()
     board = Board(config)
     game = Game(board)
-    mcts_player1 = MCTS_Pure(c_puct=5,n_playout=1000)
+    mcts_player1 = MCTSPlayer(best_policy.policy_value_fn,c_puct=5,n_playout=1000)
     mcts_player2 = MCTS_Pure(c_puct=5,n_playout=1000)
     human = Human(config)
     human2 = Human(config)
