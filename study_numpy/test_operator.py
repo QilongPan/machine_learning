@@ -2,7 +2,7 @@
 # @Author: Qilong Pan
 # @Date:   2018-12-06 09:18:01
 # @Last Modified by:   Qilong Pan
-# @Last Modified time: 2018-12-06 09:20:47
+# @Last Modified time: 2018-12-12 10:42:19
 import numpy as np 
 '''
 numpy.mean(a, axis, dtype, out，keepdims )
@@ -18,3 +18,6 @@ print(np.mean(arr1))
 print(np.mean(arr1,axis = 0))
 # 计算每一行的均值 
 print(np.mean(arr1,axis = 1))
+
+arr2 = np.array([1,2,3,4])
+print(np.tanh(arr2))
