@@ -2,7 +2,7 @@
 # @Author: Qilong Pan
 # @Date:   2018-11-28 13:05:40
 # @Last Modified by:   Qilong Pan
-# @Last Modified time: 2018-11-30 10:26:58
+# @Last Modified time: 2018-12-14 10:13:27
 
 from game import Game
 import tensorflow as tf 
@@ -16,7 +16,7 @@ class DDqn(object):
         self.gamma = 0.9
         self.alpha = 0.3
         self.epsilon = 0.1
-        self.iterator_number = 1000
+        self.iterator_number = 2000
 
     #利用ε-greedy策略
     def epsilon_greedy(self,state):
@@ -60,17 +60,19 @@ class DDqn(object):
         #地图每个位置表示一个特征，机器人所在位置为1，其余位置为0
         self.input_x = tf.placeholder(tf.float32,shape = [None,len(self.game.states)],name = 'input_name')
         #输出4个值分别为该状态采取4种行动的回报
-        self.input_y = tf.placeholder(tf.float32,shape = [None,1],name = "output_name")
+        self.input_action_assessment = tf.placeholder(tf.float32,shape = [None,1],name = "action_assessment")
 
-        self.w = tf.Variable(tf.zeros([len(self.game.states),1]))
-        self.w2 = tf.Variable(tf.zeros([len(self.game.states),1]))
-        self.b = tf.Variable(tf.zeros([1]))
-        self.b2 = tf.Variable(tf.zeros([1]))
+        self.input_operate_value = tf.placeholder(tf.float32,shape = [None,1],name = "operate_value")
+
+        self.w = tf.Variable(tf.random_normal([len(self.game.states),1]))
+        self.w2 = tf.Variable(tf.random_normal([len(self.game.states),1]))
+        self.b = tf.Variable(tf.zeros([1]) + 0.1)
+        self.b2 = tf.Variable(tf.zeros([1]) + 0.1)
         self.predict_y = tf.matmul(self.input_x,self.w) + self.b
         self.predict_y2 = tf.matmul(self.input_x,self.w2) +self.b2
         
-        self.loss1 = tf.reduce_mean(tf.square(self.predict_y - self.input_y))
-        self.loss2 = tf.reduce_mean(tf.square(self.predict_y2 - self.input_y))
+        self.loss1 = tf.reduce_mean(tf.square(self.predict_y - self.input_action_assessment))
+        self.loss2 = tf.reduce_mean(tf.square(self.predict_y2 - self.input_operate_value))
 
         self.loss = self.loss1 + self.loss2
         self.optimizer = tf.train.GradientDescentOptimizer(0.03)
@@ -97,7 +99,8 @@ class DDqn(object):
                     if value > best_value:
                         best_value = value
                 next_reward = reward + self.gamma * best_value
-                self.sess.run(self.train,feed_dict = {self.input_x:[np.array(state_features)],self.input_y:[next_reward]})
+                self.sess.run(self.train,feed_dict = {self.input_x:[np.array(state_features)],
+                    self.input_action_assessment:[next_reward],self.input_operate_value:[best_value]})
                 state = next_state
                 #走步策略采用ε-greedy策略
                 action_index = self.epsilon_greedy(next_state)
@@ -107,8 +110,11 @@ if __name__ == "__main__":
     ddn = DDqn()
     ddn.ddqn()
     for i in range(len(ddn.game.states)):
+        current_index = 0
+        current = ddn.value_function(ddn.game.states[i],ddn.game.actions[0])[0][0]
         for j in range(len(ddn.game.actions)):
-            value = ddn.value_function2(ddn.game.states[i],ddn.game.actions[j])[0][0]
-            print(round(value,2),end = "     ")
-        print()
+            value = ddn.value_function(ddn.game.states[i],ddn.game.actions[j])[0][0]
+            if value > current:
+                current_index = j
+        print("current state %d ,best action %d"%(i,current_index))
     ddn.sess.close()
