@@ -24,5 +24,8 @@ print(df.groupby(['class'])['max_speed'].max().values)
 data.drop_duplicates(subset  = ['class'],inplace = True )
 data['s'] = df.groupby(['class'])['max_speed'].max().values
 data['count'] = df.groupby(['class'])['class'].size().values
+
 #data['count'] = df.groupby(['class']).count().values
 print(data)
+print("********888")
+print( df.groupby(['class'])['class'].size().values)
