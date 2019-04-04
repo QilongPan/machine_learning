@@ -7,4 +7,3 @@ df = pd.DataFrame([[1,2,3,4],
 	[2,3,4,5]])
 se = pd.Series([1,2,3])
 print(df.size)
-print(se.size())

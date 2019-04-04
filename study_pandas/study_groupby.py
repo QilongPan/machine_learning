@@ -7,8 +7,8 @@
 import pandas as pd
 import numpy as np
 
-df = pd.DataFrame([('bird', 'Falconiformes', 389.0),
-               ('bird', 'Psittaciformes', 24.0),
+df = pd.DataFrame([('bird', '2', 389.0),
+               ('bird', '2', 24.0),
                       ('mammal', 'Carnivora', 80.2),
                      ('mammal', 'Primates', np.nan),
                       ('mammal', 'Carnivora', 58)],
@@ -28,4 +28,5 @@ data['count'] = df.groupby(['class'])['class'].size().values
 #data['count'] = df.groupby(['class']).count().values
 print(data)
 print("********888")
-print( df.groupby(['class'])['class'].size().values)
+
+print( df.groupby(['class'])['order'].count().values)
