@@ -19,7 +19,7 @@ Implement machine learning algorithm
 - 采用python进行开发，比如mysql采用pymysql，hdfs采用hive等。
 - 数据基本操作模块，对数据库，集群等数据源进行增删改查操作。
 - 数据分析模块，能使用平台提供的算法进行分析。
-
+采用django开发前端，页面用于显示mysql数据库的内容，同mysql客户端。后台远程连接mysql并读取数据输入到模型中进行预测。
 #hive技术手册
 Hive数据仓库软件支持使用SQL读取、写入和管理驻留在分布式存储中的大型数据集。结构可以投影到已经存储的数据上。用户可以通过命令行工具和JDBC驱动程序连接到Hive。  
 hive提供的特性如下：
