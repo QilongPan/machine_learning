@@ -6,9 +6,12 @@
 class Config(object):
 
     def __init__(self):
+        #牌的张数
         self.__card_num = 52
         #使用0-51表示52张扑克牌(不存在大小王)
         self.__cards = [card for card in range(self.__card_num)]
+        #小盲注
+        #大盲注
 
     @property
     def card_num(self):
