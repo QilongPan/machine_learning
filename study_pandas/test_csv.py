@@ -14,10 +14,18 @@ print(data_train)
 '''
 to_csv()是DataFrame类的方法，read_csv()是pandas的方法
 '''
-data = [1,2,3,4,5]
+data = [[1,1],[1,1],[1,1],[1,1]]
 df = pd.DataFrame(data)
+for i in range(df.shape[0]):
+    data = df.iloc[i].values
+    label = float(data[len(data)-1])
+    features = [float(i) for i in data[:len(data)-1]]
+    print(label)
+    print(features)
 '''
 index= False 表示不需要下标
 '''
+'''
 df.to_csv("logistic_regression_predictions.csv",index = False)
 print(df)
+'''
