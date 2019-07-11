@@ -53,10 +53,11 @@ def run():
     game = Game(board)
     mcts_player1 = MCTSPlayer(best_policy.policy_value_fn,c_puct=5,n_playout=1000)
     mcts_player2 = MCTS_Pure(c_puct=5,n_playout=1000)
+    mcts_player3 = MCTS_Pure(c_puct=5,n_playout=1000)
     human = Human(config)
     human2 = Human(config)
     human3 = Human(config)
-    game.start_play(mcts_player1,human,mcts_player2)
+    game.start_play(mcts_player3,human,mcts_player2)
 
 if __name__ == '__main__':
     run()

@@ -198,7 +198,7 @@ class Game(object):
             move = player_in_turn.get_action(self.board)
             cards = self.board.get_cards_by_move(move)
             cards_names = self.board.config.get_card_names_by_cards(cards)
-            print(self.board.current_state())
+        #    print(self.board.current_state())
             print("current player:",current_player)
             print("play cards:")
             print(cards_names)
