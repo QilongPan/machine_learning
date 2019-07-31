@@ -3,8 +3,12 @@
 # @Author  : QilongPan 
 # @Email   : 3102377627@qq.com
 import cv2
-img = cv2.imread("C:/Users/Administrator/Desktop/test.jpg")
-cv2.namedWindow("image") #创建窗口并显示的是图像类型
-cv2.imshow("image",img)
-cv2.waitKey(0)        #等待事件触发，参数0表示永久等待
-cv2.destroyAllWindows()   #释放窗口
+img = cv2.imread("C:/Users/EDZ/Desktop/test.png",1)
+cv2.imshow('image',img)
+k=cv2.waitKey(0)
+if k == 27:
+    cv2.destroyAllWindows()
+#ord返回字符的十进制整数
+elif k == ord('s'):
+    cv2.imwrite("test2.png",img)
+    cv2.destroyAllWindows()
