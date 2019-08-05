@@ -4,6 +4,7 @@
 # @Author  : QilongPan 
 # @Email   : 3102377627@qq.com
 import gym
+import time
 env = gym.make('CartPole-v0')
 for i_episode in range(200):
     observation = env.reset()
@@ -15,4 +16,5 @@ for i_episode in range(200):
         if done:
             print("Episode finished after {} timesteps".format(t+1))
             break
+time.sleep(5)
 env.close()
